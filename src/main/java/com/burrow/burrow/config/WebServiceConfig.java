@@ -2,7 +2,7 @@ package com.burrow.burrow.config;
 
 import com.burrow.burrow.jwt.JwtAuthorizationFilter;
 import com.burrow.burrow.jwt.JwtUtil;
-import com.burrow.burrow.user.service.UserService;
+import com.burrow.burrow.user.security.UserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -21,12 +21,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebServiceConfig {
 
     private final JwtUtil jwtUtil;
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userService, objectMapper);
+        return new JwtAuthorizationFilter(jwtUtil, userDetailsService, objectMapper);
     }
 
     @Bean
@@ -48,7 +48,7 @@ public class WebServiceConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
                         .requestMatchers("/api/users/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
-                        .requestMatchers(HttpMethod.GET, "/api/posts/list").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/api/posts/list").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

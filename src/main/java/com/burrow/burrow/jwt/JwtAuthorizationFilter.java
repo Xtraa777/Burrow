@@ -1,8 +1,7 @@
 package com.burrow.burrow.jwt;
 
 import com.burrow.burrow.user.dto.CommonResponseDto;
-import com.burrow.burrow.user.security.UserDetailsImpl;
-import com.burrow.burrow.user.service.UserService;
+import com.burrow.burrow.user.security.UserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -27,7 +26,7 @@ import java.util.Objects;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -43,14 +42,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String uid = info.getSubject();
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 // -> userDetails 에 담고
-                UserDetails userDetails = userService.getUserDetails(uid);
+                UserDetails userDetails = userDetailsService.getUserDetails(uid);
                 // -> authentication의 principal 에 담고
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 // -> securityContent 에 담고
                 context.setAuthentication(authentication);
                 // -> SecurityContextHolder 에 담고
                 SecurityContextHolder.setContext(context);
-
                 // -> 이제 @AuthenticationPrincipal 로 조회할 수 있음
             } else {
                 // 인증정보가 존재하지 않을때
@@ -61,5 +59,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
         }
+
+        filterChain.doFilter(request, response);
     }
 }

@@ -1,8 +1,10 @@
 package com.burrow.burrow.user.controller;
 
+import com.burrow.burrow.jwt.JwtUtil;
 import com.burrow.burrow.user.dto.CommonResponseDto;
 import com.burrow.burrow.user.dto.UserRequestDto;
 import com.burrow.burrow.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<Object> signup(@Valid @RequestBody UserRequestDto userRequestDto) {
@@ -28,5 +31,18 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.CREATED.value())
                 .body(new CommonResponseDto("회원가입 성공", HttpStatus.CREATED.value()));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<CommonResponseDto> login(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response) {
+        try {
+            userService.login(userRequestDto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+
+        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(userRequestDto.getUid()));
+
+        return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
     }
 }

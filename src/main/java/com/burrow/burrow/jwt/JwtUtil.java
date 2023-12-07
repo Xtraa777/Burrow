@@ -11,6 +11,7 @@ import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Base64;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -61,5 +62,19 @@ public class JwtUtil {
 
     public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+
+    public String createToken(String uid) {
+        Date date = new Date();
+
+        // 토큰 만료시간 60분
+        long TOKEN_TIME = 60 * 60 * 1000;
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(uid)
+                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
     }
 }
