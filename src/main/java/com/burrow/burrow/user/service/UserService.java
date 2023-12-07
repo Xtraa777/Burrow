@@ -3,7 +3,10 @@ package com.burrow.burrow.user.service;
 import com.burrow.burrow.user.dto.UserRequestDto;
 import com.burrow.burrow.user.entity.User;
 import com.burrow.burrow.user.repository.UserRepository;
+import com.burrow.burrow.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +30,11 @@ public class UserService {
 
         User user = new User(uid, password, nickname, description);
         userRepository.save(user);
+    }
+
+    public UserDetails getUserDetails(String uid) {
+        User user = userRepository.findByUid(uid)
+                .orElseThrow(() -> new UsernameNotFoundException("Not Found" + uid));
+        return new UserDetailsImpl(user);
     }
 }

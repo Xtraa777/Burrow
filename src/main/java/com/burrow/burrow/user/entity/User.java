@@ -28,7 +28,7 @@ public class User {
     @Column(nullable = false)
     private String description;
 
-    public User(String nickname, String uid, String password, String description) {
+    public User(String uid, String password, String nickname, String description) {
         this.nickname = nickname;
         this.uid = uid;
         this.password = password;
