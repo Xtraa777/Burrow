@@ -7,12 +7,13 @@ import com.burrow.burrow.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
-
 
     //게시물 저장 역할
     public PostResponseDto createPosts(PostRequestDto postRequestDto) {
@@ -35,4 +36,22 @@ public class PostService {
         return new PostResponseDto(savePost);
     }
 
+    //게시글 전제 조회
+    public List<PostResponseDto> getAllPosts() {
+        return postRepository.findAll().stream().map(
+                PostResponseDto::new
+        ).toList();
+    }
+
+    //게시글 단건 조회
+    public PostResponseDto getPostDto(Long postId) {
+        Post post = getPost(postId);
+        return new PostResponseDto(post);
+    }
+
+    //게시글 예외처리
+    private Post getPost(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+    }
 }

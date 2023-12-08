@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class PostResponseDto {
+public class PostResponseDto extends CommonResponseDto {
     private Long id;
     private String title;
     private String content;
