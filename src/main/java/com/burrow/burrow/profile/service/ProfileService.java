@@ -48,7 +48,11 @@ public class ProfileService {
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new IllegalArgumentException("wrong password");
         }else{
-            user.setPassword(passwordEncoder.encode(passwordRequestDto.getUpdatePassword()));
+            if(passwordRequestDto.getUpdatePassword().equals(passwordRequestDto.getCheckUpdatePassword())){
+                user.setPassword(passwordEncoder.encode(passwordRequestDto.getUpdatePassword()));
+            }else{
+                throw new IllegalArgumentException("check new password");
+            }
         }
     }
 }

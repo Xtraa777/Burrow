@@ -22,6 +22,7 @@ public class ProfileController {
         return profileService.getProfile(id);
     }
 
+    //사용자 정보 변경이 DB에는 반영 되는데 포스트맨에 결과값으로 출력이 안나옴
     @PutMapping("/profile/{userId}")
     private ProfileResponseDto updateProfile(@RequestBody ProfileRequestDto profileRequestDto,@PathVariable Long userId) {
         return profileService.updateProfile(profileRequestDto,userId);

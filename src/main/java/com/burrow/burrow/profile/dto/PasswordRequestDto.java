@@ -7,4 +7,5 @@ import lombok.Getter;
 public class PasswordRequestDto {
     String password;
     String updatePassword;
+    String checkUpdatePassword;
 }
