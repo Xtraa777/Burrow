@@ -1,43 +1,37 @@
 package com.burrow.burrow.user.entity;
 
-import com.burrow.burrow.profile.dto.PasswordRequestDto;
-import com.burrow.burrow.profile.dto.ProfileRequestDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
-
-import java.util.Date;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
+@Table(name = "users")
 public class User {
+
     @Id
-    @GeneratedValue
-    private Long userId;
-    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String uid;
-    @Column
-    private String nickname;
-    @Column
+
+    @Column(nullable = false)
     private String password;
-    @Column
-    private String discription;
-    @Column
-    private Date modified_at;
-    @Column
-    private Date created_at;
 
+    @Column(nullable = false)
+    private String nickname;
 
-    public void update(ProfileRequestDto profileRequestDto) {
-        this.userId = profileRequestDto.getUserId();
-        this.uid = profileRequestDto.getUid();
-        this.nickname = profileRequestDto.getNickname();
-        this.discription = profileRequestDto.getDiscription();
-    }
+    @Column(nullable = false)
+    private String description;
 
-    public void update(PasswordRequestDto passwordRequestDto) {
-        this.password=passwordRequestDto.getPassword();
+    public User(String uid, String password, String nickname, String description) {
+        this.nickname = nickname;
+        this.uid = uid;
+        this.password = password;
+        this.description = description;
     }
 }
