@@ -1,18 +1,21 @@
 package com.burrow.burrow.post.entity;
 
 import com.burrow.burrow.post.dto.PostRequestDto;
+import com.burrow.burrow.user.entity.User;
+import com.burrow.burrow.user.security.UserDetailsImpl;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @Entity(name = "Posts")
 @NoArgsConstructor
-public class Post {
+public class Post implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +37,20 @@ public class Post {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 
-    public Post(PostRequestDto postRequestDto) {
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private User user;
+
+    public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
+        this.user = userDetails.getUser();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setTitle(String title) {

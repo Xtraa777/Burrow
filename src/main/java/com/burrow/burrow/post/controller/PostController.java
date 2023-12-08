@@ -5,9 +5,11 @@ import com.burrow.burrow.post.dto.CommonResponseDto;
 import com.burrow.burrow.post.dto.PostRequestDto;
 import com.burrow.burrow.post.dto.PostResponseDto;
 import com.burrow.burrow.post.service.PostService;
+import com.burrow.burrow.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,19 +24,23 @@ public class PostController {
 
     //게시글 생성
     @PostMapping
-    public ResponseEntity<PostResponseDto> createPosts(@RequestBody PostRequestDto postRequestDto) {
+    public ResponseEntity<?> createPosts(
+            @RequestBody PostRequestDto postRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        PostResponseDto postResponseDto = postService.createPosts(postRequestDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED.value()).body(postResponseDto);
+        try {
+            PostResponseDto postResponseDto = postService.createPosts(postRequestDto, userDetails);
+            return ResponseEntity.ok().body(postResponseDto);
+        } catch (RejectedExecutionException | IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
     }
 
 
     //전체 게시글 조회
     @GetMapping("/list")
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> postResponseDtoList = postService.getAllPosts();
-        return ResponseEntity.ok().body(postResponseDtoList);
+    public List<PostResponseDto> getAllPosts() {
+        return postService.getAllPosts();
     }
 
     //단건 게시글 조회
@@ -52,10 +58,11 @@ public class PostController {
     @PatchMapping("/{postId}")
     public ResponseEntity<CommonResponseDto> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostRequestDto postRequestDto
+            @RequestBody PostRequestDto postRequestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         try {
-            PostResponseDto postResponseDto = postService.updatePost(postId, postRequestDto);
+            PostResponseDto postResponseDto = postService.updatePost(postId, postRequestDto, userDetails);
             return ResponseEntity.ok().body(postResponseDto);
         } catch (RejectedExecutionException | IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
@@ -65,10 +72,11 @@ public class PostController {
     //게시글 삭제
     @DeleteMapping("/{postId}")
     public ResponseEntity<CommonResponseDto> deletePost(
-            @PathVariable Long postId
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         try {
-            postService.deletePost(postId);
+            postService.deletePost(postId, userDetails);
             return ResponseEntity.ok().body(new CommonResponseDto("정상적으로 삭제 되었습니다.", HttpStatus.OK.value()));
         } catch (RejectedExecutionException | IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
