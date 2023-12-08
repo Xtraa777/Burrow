@@ -4,8 +4,6 @@ import jakarta.persistence.Column;
 import lombok.Getter;
 
 @Getter
-public class PasswordRequestDto {
-    String password;
+public class UpdatePasswordRequestDto {
     String updatePassword;
-    String checkUpdatePassword;
 }

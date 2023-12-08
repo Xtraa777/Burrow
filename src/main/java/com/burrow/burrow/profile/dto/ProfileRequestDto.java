@@ -8,6 +8,5 @@ public class ProfileRequestDto {
     private String uid;
     private String nickname;
     private String password;
-    private String discription;
-
+    private String description;
 }
