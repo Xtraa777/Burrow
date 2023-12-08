@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -61,6 +60,13 @@ public class PostService {
         post.setModifiedAt(post.getModifiedAt());
 
         return new PostResponseDto(post);
+    }
+
+    //게시글 삭제
+    @Transactional
+    public void deletePost(Long postId) {
+        Post post = getUserPost(postId);
+        postRepository.delete(post);
     }
 
     //게시글 예외처리
