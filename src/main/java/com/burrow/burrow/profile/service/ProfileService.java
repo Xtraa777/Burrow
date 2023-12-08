@@ -32,7 +32,7 @@ public class ProfileService {
         User user = userRepository.findById(userId).orElseThrow(
                 ()->new IllegalArgumentException("no user exists")
         );
-        user.update(profileRequestDto);
+//        user.update(profileRequestDto);
         return new ProfileResponseDto(user);
     }
     public void updatePassword(PasswordRequestDto passwordRequestDto, Long userId) {
@@ -46,7 +46,7 @@ public class ProfileService {
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new IllegalArgumentException("wrong password");
         }
-        user.update(passwordRequestDto);
+//        user.update(passwordRequestDto);
     }
 
 

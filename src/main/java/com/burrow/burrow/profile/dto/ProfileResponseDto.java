@@ -16,7 +16,6 @@ public class ProfileResponseDto {
         this.uid=user.getUid();
         this.nickname=user.getNickname();
         this.password=user.getPassword();
-        this.discription=user.getDiscription();
-        this.modifiedAt=user.getModified_at();
+        this.discription=user.getDescription();
     }
 }
