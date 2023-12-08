@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 @RequestMapping("/api/posts")
 @RestController
@@ -44,6 +45,20 @@ public class PostController {
             return ResponseEntity.ok().body(postResponseDto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
+    //게시글 수정
+    @PatchMapping("/{postId}")
+    public ResponseEntity<CommonResponseDto> updatePost(
+            @PathVariable Long postId,
+            @RequestBody PostRequestDto postRequestDto
+    ) {
+        try {
+            PostResponseDto postResponseDto = postService.updatePost(postId, postRequestDto);
+            return ResponseEntity.ok().body(postResponseDto);
+        } catch (RejectedExecutionException | IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
     }
 }

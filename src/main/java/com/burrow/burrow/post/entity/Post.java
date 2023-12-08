@@ -41,4 +41,15 @@ public class Post {
         this.modifiedAt = LocalDateTime.now();
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setModifiedAt(LocalDateTime modifiedAt) {
+        this.modifiedAt = LocalDateTime.now();
+    }
 }

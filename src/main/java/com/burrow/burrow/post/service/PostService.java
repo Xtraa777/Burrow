@@ -6,7 +6,9 @@ import com.burrow.burrow.post.entity.Post;
 import com.burrow.burrow.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -49,9 +51,27 @@ public class PostService {
         return new PostResponseDto(post);
     }
 
+    //게시글 수정
+    @Transactional
+    public PostResponseDto updatePost(Long postId, PostRequestDto postRequestDto) {
+        Post post = getUserPost(postId);
+
+        post.setTitle(postRequestDto.getTitle());
+        post.setContent(postRequestDto.getContent());
+        post.setModifiedAt(post.getModifiedAt());
+
+        return new PostResponseDto(post);
+    }
+
     //게시글 예외처리
     private Post getPost(Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
+    }
+
+    //게시글 수정시 예외처리
+    public Post getUserPost(Long postId) {
+        Post post = getPost(postId);
+        return post;
     }
 }
