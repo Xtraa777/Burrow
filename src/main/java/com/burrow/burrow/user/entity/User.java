@@ -1,9 +1,13 @@
 package com.burrow.burrow.user.entity;
 
+import com.burrow.burrow.profile.dto.PasswordRequestDto;
+import com.burrow.burrow.profile.dto.ProfileRequestDto;
+import com.burrow.burrow.profile.dto.UpdatePasswordRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -11,7 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,5 +36,12 @@ public class User {
         this.uid = uid;
         this.password = password;
         this.description = description;
+    }
+
+    //프로필 수정
+    public void profileUpdate(ProfileRequestDto profileRequestDto){
+        this.nickname=profileRequestDto.getNickname();
+        this.uid=profileRequestDto.getUid();
+        this.description=profileRequestDto.getDescription();
     }
 }
