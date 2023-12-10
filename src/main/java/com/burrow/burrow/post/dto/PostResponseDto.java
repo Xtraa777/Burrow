@@ -36,7 +36,7 @@ public class PostResponseDto extends CommonResponseDto {
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.commentList = new ArrayList<>();
-        for (Comment comment: commentList) {
+        for (Comment comment : commentList) {
             this.commentList.add(new CommentResponse(comment));
         }
         this.nickname = nickname;

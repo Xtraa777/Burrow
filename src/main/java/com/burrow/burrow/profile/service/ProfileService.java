@@ -3,11 +3,10 @@ package com.burrow.burrow.profile.service;
 import com.burrow.burrow.profile.dto.PasswordRequestDto;
 import com.burrow.burrow.profile.dto.ProfileRequestDto;
 import com.burrow.burrow.profile.dto.ProfileResponseDto;
-import com.burrow.burrow.profile.dto.UpdatePasswordRequestDto;
 import com.burrow.burrow.user.entity.User;
 import com.burrow.burrow.user.repository.UserRepository;
+import com.burrow.burrow.user.security.UserDetailsImpl;
 import jakarta.transaction.Transactional;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,35 +21,36 @@ public class ProfileService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ProfileResponseDto getProfile(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException("no user exists")
+    public ProfileResponseDto getProfile(UserDetailsImpl userDetails) {
+        User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인을 해주세요")
         );
         return new ProfileResponseDto(user);
     }
+
     @Transactional
-    public ProfileResponseDto updateProfile(ProfileRequestDto profileRequestDto, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(
-                ()->new IllegalArgumentException("no user exists")
+    public ProfileResponseDto updateProfile(UserDetailsImpl userDetails, ProfileRequestDto profileRequestDto) {
+        User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인을 해주세요")
         );
         user.profileUpdate(profileRequestDto);
         return new ProfileResponseDto(user);
     }
 
     @Transactional
-    public void updatePassword(PasswordRequestDto passwordRequestDto, Long userId) {
+    public void updatePassword(UserDetailsImpl userDetails, PasswordRequestDto passwordRequestDto) {
         String password = passwordRequestDto.getPassword();
         //userId로 user 확인
-        User user = userRepository.findById(userId).orElseThrow(
-                ()->new IllegalArgumentException("no user exists")
+        User user = userRepository.findById(userDetails.getUser().getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인을 해주세요")
         );
         //비밀번호 확인
-        if(!passwordEncoder.matches(password,user.getPassword())){
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("wrong password");
-        }else{
-            if(passwordRequestDto.getUpdatePassword().equals(passwordRequestDto.getCheckUpdatePassword())){
+        } else {
+            if (passwordRequestDto.getUpdatePassword().equals(passwordRequestDto.getCheckUpdatePassword())) {
                 user.setPassword(passwordEncoder.encode(passwordRequestDto.getUpdatePassword()));
-            }else{
+            } else {
                 throw new IllegalArgumentException("check new password");
             }
         }

@@ -8,13 +8,13 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
@@ -29,7 +29,7 @@ public class JwtUtil {
     public static final String AUTHORIZATION_KEY = "auth";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
-    private final long TOKEN_TIME = 60*60*1000L;
+    private final long TOKEN_TIME = 60 * 60 * 1000L;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -51,12 +51,13 @@ public class JwtUtil {
         return BEARER_PREFIX +
                 Jwts.builder()
                         .setSubject(uid)
-                        .claim(AUTHORIZATION_KEY,role)
+                        .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
+
     // JWT Cookie 에 저장
     public void addJwtToCookie(String token, HttpServletResponse res) {
         try {
@@ -103,7 +104,7 @@ public class JwtUtil {
     // HttpServletRequest 에서 Cookie Value : JWT 가져오기
     public String getTokenFromRequest(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
-        if(cookies != null) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                     try {//FU//

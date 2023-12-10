@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -29,9 +27,10 @@ public class ProfileResponseDto {
 //    private Date modifiedAt;
 
     public ProfileResponseDto(User user) {
-        this.nickname=user.getNickname();
-        this.uid=user.getUid();
-        this.password=user.getPassword();
-        this.description=user.getDescription();
+        this.id = user.getId();
+        this.nickname = user.getNickname();
+        this.uid = user.getUid();
+        this.password = user.getPassword();
+        this.description = user.getDescription();
     }
 }

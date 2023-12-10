@@ -20,5 +20,5 @@ public class UserRequestDto {
 
     private boolean admin = false;
 
-    private String adminToken="";
+    private String adminToken = "";
 }

@@ -31,13 +31,13 @@ public class UserService {
         }
         UserRoleEnum role = UserRoleEnum.USER;
         //관리자 확인
-        if(userRequestDto.isAdmin()){
-            if(!ADMIN_TOKEN.equals(adminToken)){
+        if (userRequestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(adminToken)) {
                 throw new IllegalArgumentException("관리자 암호가 틀렸습니다.");
             }
             role = UserRoleEnum.ADMIN;
         }
-        User user = new User(uid, password, nickname, description,role);
+        User user = new User(uid, password, nickname, description, role);
 
         userRepository.save(user);
     }
@@ -53,7 +53,7 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         //jwt 생성 및 쿠키에 저장
-        String token = jwtUtil.createToken(user.getUid(),user.getRole());
-        jwtUtil.addJwtToCookie(token,res);
+        String token = jwtUtil.createToken(user.getUid(), user.getRole());
+        jwtUtil.addJwtToCookie(token, res);
     }
 }

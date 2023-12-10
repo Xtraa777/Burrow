@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,11 +43,11 @@ public class CommentService {
         }
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(NullPointerException::new);
-        if(userDetails.getUser() == comment.getUser()){
+        if (userDetails.getUser().getId().equals(comment.getUser().getId())) {
             comment.updateContent(request.getContent());
             CommentResponse res = new CommentResponse(comment);
             return res;
-        }else{
+        } else {
             throw new IllegalArgumentException("작성자가 아닙니다!");
         }
 
@@ -56,11 +55,11 @@ public class CommentService {
 
     public CommentResponse deleteComment(Long commentId, UserDetailsImpl userDetails) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NullPointerException::new);
-        if(userDetails.getUser() == comment.getUser()){
+        if (userDetails.getUser().getId().equals(comment.getUser().getId())) {
             CommentResponse commentResponse = new CommentResponse(comment);
             commentRepository.delete(comment);
             return commentResponse;
-        }else{
+        } else {
             throw new IllegalArgumentException("작성자가 아닙니다!");
         }
     }

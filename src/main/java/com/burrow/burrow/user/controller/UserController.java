@@ -3,6 +3,7 @@ package com.burrow.burrow.user.controller;
 import com.burrow.burrow.jwt.JwtUtil;
 import com.burrow.burrow.user.dto.CommonResponseDto;
 import com.burrow.burrow.user.dto.UserRequestDto;
+import com.burrow.burrow.user.entity.UserRoleEnum;
 import com.burrow.burrow.user.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -36,13 +37,19 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<CommonResponseDto> login(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response) {
         try {
-            userService.login(userRequestDto,response);
+            userService.login(userRequestDto, response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }
 
 //        response.setHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(userRequestDto.getUid()));
-        jwtUtil.addJwtToCookie(jwtUtil.createToken(userRequestDto.getUid()), response);
+        UserRoleEnum role;
+        if (userRequestDto.isAdmin()) {
+            role = UserRoleEnum.ADMIN;
+        } else {
+            role = UserRoleEnum.USER;
+        }
+        jwtUtil.addJwtToCookie(jwtUtil.createToken(userRequestDto.getUid(), role), response);
         return ResponseEntity.ok().body(new CommonResponseDto("로그인 성공", HttpStatus.OK.value()));
     }
 }

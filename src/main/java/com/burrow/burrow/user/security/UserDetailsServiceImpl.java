@@ -1,7 +1,7 @@
 package com.burrow.burrow.user.security;
 
-import com.burrow.burrow.user.repository.UserRepository;
 import com.burrow.burrow.user.entity.User;
+import com.burrow.burrow.user.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

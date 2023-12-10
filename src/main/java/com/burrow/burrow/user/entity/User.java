@@ -1,23 +1,17 @@
 package com.burrow.burrow.user.entity;
 
-import com.burrow.burrow.comment.entity.Comment;
-import com.burrow.burrow.post.entity.Post;
-import com.burrow.burrow.profile.dto.PasswordRequestDto;
 import com.burrow.burrow.profile.dto.ProfileRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User extends Timestamped{
+public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,14 +36,13 @@ public class User extends Timestamped{
         this.uid = uid;
         this.password = password;
         this.description = description;
-        this.role=role;
+        this.role = role;
     }
 
     //프로필 수정
-    public void profileUpdate(ProfileRequestDto profileRequestDto){
-        this.nickname=profileRequestDto.getNickname();
-        this.uid=profileRequestDto.getUid();
-        this.description=profileRequestDto.getDescription();
+    public void profileUpdate(ProfileRequestDto profileRequestDto) {
+        this.nickname = profileRequestDto.getNickname();
+        this.description = profileRequestDto.getDescription();
     }
 
 }
