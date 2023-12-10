@@ -12,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -53,6 +54,7 @@ public class Post implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
         this.user = userDetails.getUser();
+        this.commentList = new ArrayList<>();
     }
 
     public void setUser(User user) {

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,5 +46,7 @@ public class User {
         this.uid = uid;
         this.password = password;
         this.description = description;
+        this.commentList = new ArrayList<>();
+        this.postList = new ArrayList<>();
     }
 }

@@ -1,7 +1,6 @@
 package com.burrow.burrow.comment.entity;
 
 import com.burrow.burrow.comment.dto.CommentRequest;
-import com.burrow.burrow.comment.dto.CommentResponse;
 import com.burrow.burrow.post.entity.Post;
 import com.burrow.burrow.user.entity.User;
 import jakarta.persistence.*;
