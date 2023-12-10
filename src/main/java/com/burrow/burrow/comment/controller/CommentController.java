@@ -4,7 +4,6 @@ import com.burrow.burrow.comment.dto.CommentRequest;
 import com.burrow.burrow.comment.dto.CommentResponse;
 import com.burrow.burrow.comment.service.CommentService;
 import com.burrow.burrow.post.dto.CommonResponseDto;
-import com.burrow.burrow.post.dto.PostResponseDto;
 import com.burrow.burrow.user.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.RejectedExecutionException;
 
 @RestController

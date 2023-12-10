@@ -7,7 +7,6 @@ import com.burrow.burrow.comment.repository.CommentRepository;
 import com.burrow.burrow.post.entity.Post;
 import com.burrow.burrow.post.repository.PostRepository;
 import com.burrow.burrow.user.security.UserDetailsImpl;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
