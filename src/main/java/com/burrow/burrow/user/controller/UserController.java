@@ -36,7 +36,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<CommonResponseDto> login(@RequestBody UserRequestDto userRequestDto, HttpServletResponse response) {
         try {
-            userService.login(userRequestDto);
+            userService.login(userRequestDto,response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new CommonResponseDto(e.getMessage(), HttpStatus.BAD_REQUEST.value()));
         }

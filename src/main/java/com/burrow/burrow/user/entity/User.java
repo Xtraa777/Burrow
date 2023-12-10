@@ -33,12 +33,16 @@ public class User extends Timestamped{
 
     @Column(nullable = false)
     private String description;
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
-    public User(String uid, String password, String nickname, String description) {
+    public User(String uid, String password, String nickname, String description, UserRoleEnum role) {
         this.nickname = nickname;
         this.uid = uid;
         this.password = password;
         this.description = description;
+        this.role=role;
     }
 
     //프로필 수정
@@ -47,4 +51,5 @@ public class User extends Timestamped{
         this.uid=profileRequestDto.getUid();
         this.description=profileRequestDto.getDescription();
     }
+
 }
