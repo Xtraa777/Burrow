@@ -1,5 +1,6 @@
 package com.burrow.burrow.post.entity;
 
+import com.burrow.burrow.comment.entity.Comment;
 import com.burrow.burrow.post.dto.PostRequestDto;
 import com.burrow.burrow.user.entity.User;
 import com.burrow.burrow.user.security.UserDetailsImpl;
@@ -11,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity(name = "Posts")
@@ -40,6 +42,10 @@ public class Post implements Serializable {
     @ManyToOne
     @JoinColumn(name = "users_id")
     private User user;
+
+    @OneToMany
+    @JoinColumn(name = "comments_id")
+    private List<Comment> commentList;
 
     public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
         this.title = postRequestDto.getTitle();

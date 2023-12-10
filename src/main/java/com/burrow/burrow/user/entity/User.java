@@ -1,9 +1,13 @@
 package com.burrow.burrow.user.entity;
 
+import com.burrow.burrow.comment.entity.Comment;
+import com.burrow.burrow.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +31,14 @@ public class User {
 
     @Column(nullable = false)
     private String description;
+
+    @OneToMany
+    @JoinColumn(name = "comments_id")
+    private List<Comment> commentList;
+
+    @OneToMany
+    @JoinColumn(name = "posts_id")
+    private List<Post> postList;
 
     public User(String uid, String password, String nickname, String description) {
         this.nickname = nickname;
