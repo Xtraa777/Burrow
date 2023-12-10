@@ -1,9 +1,14 @@
 package com.burrow.burrow.user.entity;
 
+import com.burrow.burrow.comment.entity.Comment;
+import com.burrow.burrow.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter

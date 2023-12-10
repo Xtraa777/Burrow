@@ -1,5 +1,7 @@
 package com.burrow.burrow.post.service;
 
+import com.burrow.burrow.comment.entity.Comment;
+import com.burrow.burrow.comment.repository.CommentRepository;
 import com.burrow.burrow.post.dto.PostRequestDto;
 import com.burrow.burrow.post.dto.PostResponseDto;
 import com.burrow.burrow.post.entity.Post;
@@ -19,6 +21,7 @@ import java.util.concurrent.RejectedExecutionException;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     //게시물 저장 역할
     public PostResponseDto createPosts(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
@@ -58,7 +61,8 @@ public class PostService {
     //게시글 단건 조회
     public PostResponseDto getPostDto(Long postId) {
         Post post = getPost(postId);
-        return new PostResponseDto(post);
+        List<Comment> commentList = commentRepository.findAllByPostId(postId);
+        return new PostResponseDto(post, commentList, post.getUser().getNickname());
     }
 
     //게시글 수정
