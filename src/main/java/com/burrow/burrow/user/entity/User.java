@@ -1,5 +1,7 @@
 package com.burrow.burrow.user.entity;
 
+import com.burrow.burrow.comment.entity.Comment;
+import com.burrow.burrow.post.entity.Post;
 import com.burrow.burrow.profile.dto.PasswordRequestDto;
 import com.burrow.burrow.profile.dto.ProfileRequestDto;
 import com.burrow.burrow.profile.dto.UpdatePasswordRequestDto;
@@ -8,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
