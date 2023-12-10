@@ -1,20 +1,17 @@
 package com.burrow.burrow.user.entity;
 
-import com.burrow.burrow.profile.dto.PasswordRequestDto;
 import com.burrow.burrow.profile.dto.ProfileRequestDto;
-import com.burrow.burrow.profile.dto.UpdatePasswordRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
