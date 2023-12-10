@@ -7,6 +7,7 @@ import com.burrow.burrow.comment.repository.CommentRepository;
 import com.burrow.burrow.post.entity.Post;
 import com.burrow.burrow.post.repository.PostRepository;
 import com.burrow.burrow.user.security.UserDetailsImpl;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,33 +22,47 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
+    @Transactional
     public CommentResponse createComment(Long postId, CommentRequest request, UserDetailsImpl userDetails) {
-        if(request.getContent() == null){
+        if (request.getContent() == null) {
             throw new IllegalArgumentException("내용을 입력해주세요");
         }
         Post post = postRepository.findById(postId).orElseThrow(NullPointerException::new);
         Comment comment = new Comment(request, userDetails.getUser(), post);
-        post.getCommentList().add(comment);
         commentRepository.save(comment);
         return new CommentResponse(comment);
     }
 
     public List<CommentResponse> getComments(Long postId) {
-        return commentRepository.findAllById(Collections.singleton(postId)).stream().map(CommentResponse::new).collect(Collectors.toList());
+        return commentRepository.findAllByPostId(postId).stream().map(CommentResponse::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public CommentResponse updateComment(Long commentId, CommentRequest request, UserDetailsImpl userDetails) {
-        if(request.getContent() == null){
+        if (request.getContent() == null) {
             throw new IllegalArgumentException("내용을 입력해주세요");
         }
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(NullPointerException::new);
-        CommentResponse res = new CommentResponse(comment);
-        return res;
+        if(userDetails.getUser() == comment.getUser()){
+            comment.updateContent(request.getContent());
+            CommentResponse res = new CommentResponse(comment);
+            return res;
+        }else{
+            throw new IllegalArgumentException("작성자가 아닙니다!");
+        }
+
     }
 
-    public void deleteComment(Long commentId) {
+    public CommentResponse deleteComment(Long commentId, UserDetailsImpl userDetails) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NullPointerException::new);
-        commentRepository.delete(comment);
+        if(userDetails.getUser() == comment.getUser()){
+            CommentResponse commentResponse = new CommentResponse(comment);
+            commentRepository.delete(comment);
+            return commentResponse;
+        }else{
+            throw new IllegalArgumentException("작성자가 아닙니다!");
+        }
     }
 
 }

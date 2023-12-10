@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="comments")
+@Table(name="Comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Comment {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "posts_id")
     private Post post;
 
     @ManyToOne
@@ -33,5 +33,9 @@ public class Comment {
         this.content = request.getContent();
         this.user = user;
         this.post = post;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
     }
 }

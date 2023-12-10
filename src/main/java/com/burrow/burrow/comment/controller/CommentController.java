@@ -54,7 +54,14 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Long commentId) {
-        commentService.deleteComment(commentId);
+    public ResponseEntity<?> deleteComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        try {
+            CommentResponse response = commentService.deleteComment(commentId, userDetails);
+            return ResponseEntity.ok().body(response);
+        } catch (RejectedExecutionException | IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(new CommonResponseDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value()));
+        }
     }
 }
