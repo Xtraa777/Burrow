@@ -17,4 +17,8 @@ public class UserRequestDto {
     private String nickname;
 
     private String description;
+
+    private boolean admin = false;
+
+    private String adminToken="";
 }

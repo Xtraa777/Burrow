@@ -1,13 +1,10 @@
 package com.burrow.burrow.user.entity;
 
-import com.burrow.burrow.profile.dto.PasswordRequestDto;
 import com.burrow.burrow.profile.dto.ProfileRequestDto;
-import com.burrow.burrow.profile.dto.UpdatePasswordRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Getter
@@ -30,12 +27,16 @@ public class User {
 
     @Column(nullable = false)
     private String description;
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
 
-    public User(String uid, String password, String nickname, String description) {
+    public User(String uid, String password, String nickname, String description, UserRoleEnum role) {
         this.nickname = nickname;
         this.uid = uid;
         this.password = password;
         this.description = description;
+        this.role=role;
     }
 
     //프로필 수정
@@ -44,4 +45,5 @@ public class User {
         this.uid=profileRequestDto.getUid();
         this.description=profileRequestDto.getDescription();
     }
+
 }

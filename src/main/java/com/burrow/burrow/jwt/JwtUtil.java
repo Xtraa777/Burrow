@@ -1,14 +1,21 @@
 package com.burrow.burrow.jwt;
 
+import com.burrow.burrow.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -19,15 +26,16 @@ public class JwtUtil {
 
     // Header Key 값
     public static final String AUTHORIZATION_HEADER = "Authorization";
-
+    public static final String AUTHORIZATION_KEY = "auth";
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
+    private final long TOKEN_TIME = 60*60*1000L;
 
     @Value("${jwt.secret.key}")
     private String secretKey;
 
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
+    public static final Logger logger = LoggerFactory.getLogger("JWT 관련 로그");
     private Key key;
 
     @PostConstruct
@@ -36,14 +44,43 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String resloveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7);
+    //토큰 생성
+    public String createToken(String uid, UserRoleEnum role) {
+        Date date = new Date();
+
+        return BEARER_PREFIX +
+                Jwts.builder()
+                        .setSubject(uid)
+                        .claim(AUTHORIZATION_KEY,role)
+                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))
+                        .setIssuedAt(date)
+                        .signWith(key, signatureAlgorithm)
+                        .compact();
+    }
+    // JWT Cookie 에 저장
+    public void addJwtToCookie(String token, HttpServletResponse res) {
+        try {
+            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+
+            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
+            cookie.setPath("/");
+
+            // Response 객체에 Cookie 추가
+            res.addCookie(cookie);
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
         }
-        return null;
     }
 
+    // JWT 토큰 substring
+    public String substringToken(String tokenValue) {
+        if (StringUtils.hasText(tokenValue) && tokenValue.startsWith(BEARER_PREFIX)) {
+            return tokenValue.substring(7);
+        }
+        logger.error("Not Found Token");
+        throw new NullPointerException("Not Found Token");
+    }
+    //토큰 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
@@ -64,17 +101,13 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public String createToken(String uid) {
-        Date date = new Date();
 
-        // 토큰 만료시간 60분
-        long TOKEN_TIME = 60 * 60 * 1000;
-        return BEARER_PREFIX +
-                Jwts.builder()
-                        .setSubject(uid)
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))
-                        .setIssuedAt(date)
-                        .signWith(key, signatureAlgorithm)
-                        .compact();
+    public String resloveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
+
 }
