@@ -33,20 +33,10 @@ public class User {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "comments_id")
-    private List<Comment> commentList;
-
-    @OneToMany
-    @JoinColumn(name = "posts_id")
-    private List<Post> postList;
-
     public User(String uid, String password, String nickname, String description) {
         this.nickname = nickname;
         this.uid = uid;
         this.password = password;
         this.description = description;
-        this.commentList = new ArrayList<>();
-        this.postList = new ArrayList<>();
     }
 }
