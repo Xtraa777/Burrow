@@ -44,9 +44,6 @@ public class Post implements Serializable {
     @JoinColumn(name = "users_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "comments_id")
-    private List<Comment> commentList;
 
     public Post(PostRequestDto postRequestDto, UserDetailsImpl userDetails) {
         this.title = postRequestDto.getTitle();
@@ -54,7 +51,6 @@ public class Post implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.modifiedAt = LocalDateTime.now();
         this.user = userDetails.getUser();
-        this.commentList = new ArrayList<>();
     }
 
     public void setUser(User user) {
